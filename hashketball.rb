@@ -134,3 +134,90 @@ def big_shoe_rebounds
   end
   rebounds
 end
+
+def most_points_scored
+  most_points = 0
+  player = ""
+  game_hash.each do |location, team_data|
+    team_data.each do |data, values|
+      if values.is_a?(Hash)
+        values.each do |mate, stats|
+          if stats[:points] > most_points
+            most_points = stats[:points]
+            player = mate
+          end
+        end
+      end
+    end
+  end
+  player
+end
+
+def winning_team
+  points_one = 0
+  points_two = 0
+  game_hash.each do |location, team_data|
+    if points_one == 0
+      team_data.each do |data, values|
+        if values.is_a?(Hash)
+          values.each do |mate, stats|
+            points_one += stats[:points]
+          end
+        end
+      end
+      else
+      team_data.each do |data, values|
+        if values.is_a?(Hash)
+          values.each do |mate, stats|
+            points_two += stats[:points]
+          end
+        end
+      end
+    end
+  end
+  if points_one > points_two
+    game_hash[:home][:team_name]
+  else
+    game_hash[:away][:team_name]
+  end
+end
+
+def player_with_longest_name
+  length = 0
+  player = ""
+  game_hash.each do |location, team_data|
+    team_data.each do |data, values|
+      if values.is_a?(Hash)
+        values.each do |mate, stats|
+          if mate.length > length
+            player = mate
+          end
+        end
+      end
+    end
+  end
+  player
+end
+
+def long_name_steals_a_ton?
+  num_steals = 0
+  player_with_most_steals = ""
+  game_hash.each do |location, team_data|
+    team_data.each do |data, values|
+      if values.is_a?(Hash)
+        values.each do |mate, stats|
+          if stats[:steals] > num_steals
+            num_steals = stats[:steals]
+            player_with_most_steals = mate
+          end
+        end
+      end
+    end
+  end
+
+  if player_with_most_steals == player_with_longest_name
+    true
+  else
+    false
+  end
+end
