@@ -1,6 +1,6 @@
 # Write your code here!
 require "pry"
-require "byebug"
+# require "byebug"
 
 def game_hash
   {
@@ -196,7 +196,6 @@ def player_stats(player)
 
       if location_team_stats == :players
         specific_stats.collect do |team_player, player_stats|
-          #byebug
           if team_player == player
             answer = player_stats
           end
@@ -207,4 +206,84 @@ def player_stats(player)
   answer
 end
 
-player_stats("Reggie Evans")
+def big_shoe_rebounds
+  biggest_shoe_size = 0
+  biggest_rebounds = 0
+  game_hash.each do |team_location, team_stats|
+    team_stats[:players].each do |player, stats|
+      if biggest_shoe_size < stats[:shoe]
+        biggest_shoe_size = stats[:shoe]
+        biggest_rebounds = stats[:rebounds]
+      end
+    end
+  end
+  biggest_rebounds
+end
+
+def most_points_scored
+  most_points = 0
+  most_points_player = nil
+  game_hash.each do |team_location, team_stats|
+    team_stats[:players].each do |player, stats|
+      if !most_points_player || most_points < stats[:points]
+        most_points = stats[:points]
+        most_points_player = player
+      end
+    end
+  end
+  most_points_player
+end
+
+
+def winning_team
+  winner = nil
+  winner_points = 0
+  game_hash.each do |home_away, team|
+    total_points = team_points(team)
+    if total_points > winner_points
+      winner_points = total_points
+      winner = team[:team_name]
+    end
+  end
+  winner
+end
+
+def team_points(team)
+  points = 0
+  team[:players].each do |player, stat|
+    points += stat[:points]
+  end
+  points
+end
+
+def player_with_longest_name
+  longest_name = ""
+  game_hash.each do |home_away, team_stats|
+    team_stats[:players].each do |player_name, player_stats|
+      if player_name.length > longest_name.length
+        longest_name = player_name
+      end
+    end
+  end
+  longest_name
+
+end
+
+def long_name_steals_a_ton?
+  player_steals(player_with_longest_name)
+  byebug
+end
+
+# def player_steals(player)
+#   game_hash.each do |team_location, team_stats|
+#     team_stats.each do |location_team_stats, specific_stats|
+#       if location_team_stats == :players
+#         specific_stats.each do |team_player, player_stats|
+#           if team_player == player
+#             return player_stats[:steals]
+#           end
+#         end
+#       end
+#     end
+#   end
+# end
